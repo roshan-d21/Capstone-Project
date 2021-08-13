@@ -3,9 +3,9 @@ from torch import nn
 
 device = 'cuda' if torch.cuda.is_available else 'cpu'
 
-class Encoder(nn.Module):
+class Decoder(nn.Module):
     def __init__(self):
-        super(Encoder, self).__init__()
+        super(Decoder, self).__init__()
     
-    def forward:
+    def forward(self):
         pass
