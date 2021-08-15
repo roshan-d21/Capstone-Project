@@ -1,6 +1,8 @@
 import torch
 from torch import nn
 
+from model.utils import make_mlp
+
 class PoolingModule(nn.Module):
     """Pooling module as proposed in the Social GAN paper"""
     def __init__(

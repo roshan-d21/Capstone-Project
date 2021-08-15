@@ -1,6 +1,9 @@
 import torch
 from torch import nn
 
+from model.PoolingModule import PoolingModule
+from model.utils import make_nlp
+
 class Decoder(nn.Module):
     def __init__(
         self, seq_len, embedding_dim=64, hidden_dim=128, mlp_dim=1024, num_layers=1,
@@ -21,7 +24,7 @@ class Decoder(nn.Module):
         )
 
         if pool_every_timestep:
-            self.pool_net = PoolHiddenNet(
+            self.pool_net = PoolingModule(
                 embedding_dim=self.embedding_dim,
                 hidden_dim=self.hidden_dim,
                 mlp_dim=mlp_dim,
@@ -32,7 +35,7 @@ class Decoder(nn.Module):
             )
 
             mlp_dims = [hidden_dim + bottleneck_dim, mlp_dim, hidden_dim]
-            self.mlp = make_mlp(
+            self.mlp = make_nlp(
                 mlp_dims,
                 activation=activation,
                 batch_norm=batch_norm,
