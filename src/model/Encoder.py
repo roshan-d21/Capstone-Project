@@ -10,7 +10,7 @@ class Encoder(nn.Module):
                  the final results.
     dropout - introduces a Dropout layer on the outputs of each LSTM layer except the last layer, with dropout probability equal to dropout
     '''
-    def __init__(self, self, embedding_dim=64, hidden_dim=64, mlp_dim=1024, num_layers=1, dropout=0.0):
+    def __init__(self, embedding_dim=64, hidden_dim=64, mlp_dim=1024, num_layers=1, dropout=0.0):
         super(Encoder, self).__init__()
         self.mlp_dim = 1024
 
