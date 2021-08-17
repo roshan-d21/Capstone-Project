@@ -2,8 +2,8 @@ import torch
 from torch import nn
 
 from model.Encoder import Encoder
-
-from mode.utils import make_mlp
+from model.PoolingModule import PoolingModule
+from model.utils import make_mlp
 
 
 class Discriminator(nn.Module):
