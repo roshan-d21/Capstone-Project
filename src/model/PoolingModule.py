@@ -24,7 +24,8 @@ class PoolingModule(nn.Module):
             mlp_pre_pool_dims,
             activation=activation,
             batch_norm=batch_norm,
-            dropout=dropout)
+            dropout=dropout
+        )
 
     def repeat(self, tensor, num_reps):
         """
@@ -53,19 +54,28 @@ class PoolingModule(nn.Module):
             start = start.item()
             end = end.item()
             num_ped = end - start
+
             curr_hidden = h_states.view(-1, self.hidden_dim)[start:end]
             curr_end_pos = end_pos[start:end]
+
             # Repeat -> H1, H2, H1, H2
             curr_hidden_1 = curr_hidden.repeat(num_ped, 1)
+
             # Repeat position -> P1, P2, P1, P2
             curr_end_pos_1 = curr_end_pos.repeat(num_ped, 1)
+
             # Repeat position -> P1, P1, P2, P2
             curr_end_pos_2 = self.repeat(curr_end_pos, num_ped)
+
             curr_rel_pos = curr_end_pos_1 - curr_end_pos_2
             curr_rel_embedding = self.spatial_embedding(curr_rel_pos)
+
             mlp_h_input = torch.cat([curr_rel_embedding, curr_hidden_1], dim=1)
+
             curr_pool_h = self.mlp_pre_pool(mlp_h_input)
             curr_pool_h = curr_pool_h.view(num_ped, num_ped, -1).max(1)[0]
+
             pool_h.append(curr_pool_h)
+            
         pool_h = torch.cat(pool_h, dim=0)
         return pool_h

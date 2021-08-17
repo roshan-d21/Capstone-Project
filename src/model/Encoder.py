@@ -18,9 +18,9 @@ class Encoder(nn.Module):
         self.hidden_dim = hidden_dim
         self.num_layers = num_layers
 
-        self.encoder = nn.LSTM(embedding_dim, hidden_dim, num_layers, dropout=dropout)
-
         self.spatial_embedding = nn.Linear(2, embedding_dim)
+        
+        self.encoder = nn.LSTM(embedding_dim, hidden_dim, num_layers, dropout=dropout)
 
     def init_hidden(self, batch):
         return (
@@ -39,7 +39,9 @@ class Encoder(nn.Module):
         batch = obs_traj.size(1)
         obs_traj_embedding = self.spatial_embedding(obs_traj.view(-1, 2))
         obs_traj_embedding = obs_traj_embedding.view(-1, batch, self.embedding_dim)
+
         state_tuple = self.init_hidden(batch)
         output, state = self.encoder(obs_traj_embedding, state_tuple)
         final_h = state[0]
+
         return final_h

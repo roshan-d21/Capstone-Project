@@ -19,9 +19,7 @@ class Decoder(nn.Module):
         self.embedding_dim = embedding_dim
         self.pool_every_timestep = pool_every_timestep
 
-        self.decoder = nn.LSTM(
-            embedding_dim, hidden_dim, num_layers, dropout=dropout
-        )
+        self.decoder = nn.LSTM(embedding_dim, hidden_dim, num_layers, dropout=dropout)
 
         if pool_every_timestep:
             self.pool_net = PoolingModule(
@@ -57,6 +55,7 @@ class Decoder(nn.Module):
         """
         batch = last_pos.size(0)
         pred_traj_fake_rel = []
+        
         decoder_input = self.spatial_embedding(last_pos_rel)
         decoder_input = decoder_input.view(1, batch, self.embedding_dim)
 
@@ -68,16 +67,18 @@ class Decoder(nn.Module):
             if self.pool_every_timestep:
                 decoder_h = state_tuple[0]
                 pool_h = self.pool_net(decoder_h, seq_start_end, curr_pos)
-                decoder_h = torch.cat(
-                    [decoder_h.view(-1, self.hidden_dim), pool_h], dim=1)
+
+                decoder_h = torch.cat([decoder_h.view(-1, self.hidden_dim), pool_h], dim=1)
                 decoder_h = self.mlp(decoder_h)
                 decoder_h = torch.unsqueeze(decoder_h, 0)
+
                 state_tuple = (decoder_h, state_tuple[1])
 
             embedding_input = rel_pos
 
             decoder_input = self.spatial_embedding(embedding_input)
             decoder_input = decoder_input.view(1, batch, self.embedding_dim)
+
             pred_traj_fake_rel.append(rel_pos.view(batch, -1))
             last_pos = curr_pos
 
