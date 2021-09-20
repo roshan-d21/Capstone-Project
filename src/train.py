@@ -97,8 +97,14 @@ parser.add_argument('--gpu_num', default="0", type=str)
 
 def weights_init(m):
     classname = m.__class__.__name__
-    if classname.find('Linear') != -1:
-        nn.init.kaiming_normal_(m.weight)
+    if classname.find('Conv') != -1:
+        nn.init.normal_(m.weight.data, 0.0, 0.02)
+    elif classname.find('BatchNorm') != -1:
+        nn.init.normal_(m.weight.data, 1.0, 0.02)
+        nn.init.constant_(m.bias.data, 0)
+    # classname = m.__class__.__name__
+    # if classname.find('Linear') != -1:
+    #     nn.init.kaiming_normal_(m.weight)
 
 def get_dtypes(args):
     long_dtype = torch.LongTensor
@@ -143,6 +149,8 @@ def main(args):
 
     long_dtype, float_dtype = get_dtypes(args)
 
+    device = torch.device("cuda:0" if (torch.cuda.is_available() and args.gpu_num > 0) else "cpu")
+
     logger.info("Initializing train dataset")
     train_dset, train_loader = data_loader(args, train_path)
     logger.info("Initializing val dataset")
@@ -172,10 +180,10 @@ def main(args):
         bottleneck_dim=args.bottleneck_dim,
         neighborhood_size=args.neighborhood_size,
         grid_size=args.grid_size,
-        batch_norm=args.batch_norm)
+        batch_norm=args.batch_norm).to(device)
 
     generator.apply(weights_init)
-    generator.type(float_dtype).train()
+    # generator.type(float_dtype).train()
     logger.info('Here is the generator:')
     logger.info(generator)
 
@@ -188,10 +196,10 @@ def main(args):
         num_layers=args.num_layers,
         dropout=args.dropout,
         batch_norm=args.batch_norm,
-        d_type=args.d_type)
+        d_type=args.d_type).to(device)
 
     discriminator.apply(weights_init)
-    discriminator.type(float_dtype).train()
+    # discriminator.type(float_dtype).train()
     logger.info('Here is the discriminator:')
     logger.info(discriminator)
 
