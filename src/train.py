@@ -397,7 +397,7 @@ def main(args):
 
 
 def discriminator_step(args, batch, generator, discriminator, d_loss_fn, optimizer_d):
-    print(batch, batch[0], batch[0].to(torch.device('cuda:0')))
+    print(batch, batch[0])
     # batch = batch[0]
     # batch = [tensor.cuda() for tensor in batch]
     (obs_traj, pred_traj_gt, obs_traj_rel, pred_traj_gt_rel, non_linear_ped,
