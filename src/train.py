@@ -23,6 +23,8 @@ from model.loader import data_loader
 
 torch.backends.cudnn.benchmark = True
 
+device = torch.device("cuda:0" if (torch.cuda.is_available()) else "cpu")
+
 parser = argparse.ArgumentParser()
 FORMAT = '[%(levelname)s: %(filename)s: %(lineno)4d]: %(message)s'
 logging.basicConfig(level=logging.INFO, format=FORMAT, stream=sys.stdout)
@@ -149,7 +151,6 @@ def main(args):
 
     long_dtype, float_dtype = get_dtypes(args)
 
-    device = torch.device("cuda:0" if (torch.cuda.is_available() and args.gpu_num > 0) else "cpu")
     print("Torch Device:", device)
 
     logger.info("Initializing train dataset")
@@ -268,6 +269,7 @@ def main(args):
         logger.info('Starting epoch {}'.format(epoch))
 
         for batch in train_loader:
+            batch = [tensor.to(device) for tensor in batch]
             if args.timing == 1:
                 torch.cuda.synchronize()
                 t1 = time.time()
