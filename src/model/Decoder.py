@@ -2,7 +2,7 @@ import torch
 from torch import nn
 
 from model.PoolingModule import PoolingModule
-from model.utils import make_nlp
+from model.utils import make_mlp
 
 class Decoder(nn.Module):
     def __init__(
@@ -33,7 +33,7 @@ class Decoder(nn.Module):
             )
 
             mlp_dims = [hidden_dim + bottleneck_dim, mlp_dim, hidden_dim]
-            self.mlp = make_nlp(
+            self.mlp = make_mlp(
                 mlp_dims,
                 activation=activation,
                 batch_norm=batch_norm,
