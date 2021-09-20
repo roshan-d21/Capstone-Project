@@ -96,15 +96,15 @@ parser.add_argument('--gpu_num', default="0", type=str)
 
 
 def weights_init(m):
-    classname = m.__class__.__name__
-    if classname.find('Conv') != -1:
-        nn.init.normal_(m.weight.data, 0.0, 0.02)
-    elif classname.find('BatchNorm') != -1:
-        nn.init.normal_(m.weight.data, 1.0, 0.02)
-        nn.init.constant_(m.bias.data, 0)
     # classname = m.__class__.__name__
-    # if classname.find('Linear') != -1:
-    #     nn.init.kaiming_normal_(m.weight)
+    # if classname.find('Conv') != -1:
+    #     nn.init.normal_(m.weight.data, 0.0, 0.02)
+    # elif classname.find('BatchNorm') != -1:
+    #     nn.init.normal_(m.weight.data, 1.0, 0.02)
+    #     nn.init.constant_(m.bias.data, 0)
+    classname = m.__class__.__name__
+    if classname.find('Linear') != -1:
+        nn.init.kaiming_normal_(m.weight)
 
 def get_dtypes(args):
     long_dtype = torch.LongTensor
@@ -150,6 +150,7 @@ def main(args):
     long_dtype, float_dtype = get_dtypes(args)
 
     device = torch.device("cuda:0" if (torch.cuda.is_available() and args.gpu_num > 0) else "cpu")
+    print("Torch Device:", device)
 
     logger.info("Initializing train dataset")
     train_dset, train_loader = data_loader(args, train_path)
@@ -396,7 +397,9 @@ def main(args):
 
 
 def discriminator_step(args, batch, generator, discriminator, d_loss_fn, optimizer_d):
-    batch = [tensor.cuda() for tensor in batch]
+    print(batch, batch[0], batch[0].to(torch.device('cuda:0')))
+    # batch = batch[0]
+    # batch = [tensor.cuda() for tensor in batch]
     (obs_traj, pred_traj_gt, obs_traj_rel, pred_traj_gt_rel, non_linear_ped,
      loss_mask, seq_start_end) = batch
     losses = {}
