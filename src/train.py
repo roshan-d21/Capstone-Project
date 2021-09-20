@@ -399,8 +399,6 @@ def main(args):
 
 
 def discriminator_step(args, batch, generator, discriminator, d_loss_fn, optimizer_d):
-    print(batch, '\n', 'Length=', len(batch), '\n', batch[0])
-    # batch = batch[0]
     # batch = [tensor.cuda() for tensor in batch]
     (obs_traj, pred_traj_gt, obs_traj_rel, pred_traj_gt_rel, non_linear_ped,
      loss_mask, seq_start_end) = batch
@@ -438,7 +436,7 @@ def discriminator_step(args, batch, generator, discriminator, d_loss_fn, optimiz
 
 
 def generator_step(args, batch, generator, discriminator, g_loss_fn, optimizer_g):
-    batch = [tensor.cuda() for tensor in batch]
+    # batch = [tensor.cuda() for tensor in batch]
     (obs_traj, pred_traj_gt, obs_traj_rel, pred_traj_gt_rel, non_linear_ped,
      loss_mask, seq_start_end) = batch
     losses = {}
