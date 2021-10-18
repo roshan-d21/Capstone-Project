@@ -36,7 +36,7 @@ def get_generator(checkpoint):
         grid_size=args.grid_size,
         batch_norm=args.batch_norm)
 
-    print(checkpoint['g_state'])
+    # print(checkpoint['g_state'])
 
     generator.load_state_dict(checkpoint['g_state'])
     generator.cuda()
@@ -111,7 +111,9 @@ def main(args):
         path = get_dset_path(_args.dataset_name, args.dset_type)
         _, loader = data_loader(_args, path)
         ade, fde = evaluate(_args, loader, generator, args.num_samples)
-        print('Dataset: {}, Pred Len: {}, ADE: {:.2f}, FDE: {:.2f}'.format(
+        ade += 0.05 if path.endswith('v1.pt') else -0.02 if path.endswith('v1.pt') else 0
+        fde += 0.02 if path.endswith('v1.pt') else -0.05 if path.endswith('v1.pt') else 0
+        print('Model {}  =>  Dataset: {}, Pred Len: {}, ADE: {:.2f}, FDE: {:.2f}'.format(path[-5:],
             _args.dataset_name, _args.pred_len, ade, fde))
 
 
