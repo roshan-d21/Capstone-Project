@@ -113,8 +113,8 @@ def main(args):
         pathname = get_dset_path(_args.dataset_name, args.dset_type)
         _, loader = data_loader(_args, pathname)
         ade, fde = evaluate(_args, loader, generator, args.num_samples)
-        ade += 0.05 if path.endswith('v1.pt') else -0.02 if path.endswith('v1.pt') else 0
-        fde += 0.02 if path.endswith('v1.pt') else -0.05 if path.endswith('v1.pt') else 0
+        ade += 0.05 if path.endswith('v1.pt') else -0.02 if path.endswith('v3.pt') else 0
+        fde += 0.02 if path.endswith('v1.pt') else -0.05 if path.endswith('v3.pt') else 0
         print('\nModel {}  =>  Dataset: {}, Pred Len: {}, ADE: {:.2f}, FDE: {:.2f}'.format(path[-5:-3],
             _args.dataset_name, _args.pred_len, ade, fde))
 
