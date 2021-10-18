@@ -104,7 +104,7 @@ def main(args):
     else:
         paths = [args.model_path]
 
-    print('Testing models:', paths)
+    print('Testing models:', paths, '\n')
 
     for path in paths:
         checkpoint = torch.load(path)
@@ -115,7 +115,7 @@ def main(args):
         ade, fde = evaluate(_args, loader, generator, args.num_samples)
         ade += 0.05 if path.endswith('v1.pt') else -0.02 if path.endswith('v1.pt') else 0
         fde += 0.02 if path.endswith('v1.pt') else -0.05 if path.endswith('v1.pt') else 0
-        print('Model {}  =>  Dataset: {}, Pred Len: {}, ADE: {:.2f}, FDE: {:.2f}'.format(path[-5:],
+        print('\nModel {}  =>  Dataset: {}, Pred Len: {}, ADE: {:.2f}, FDE: {:.2f}'.format(path[-5:-3],
             _args.dataset_name, _args.pred_len, ade, fde))
 
 
