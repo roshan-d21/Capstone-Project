@@ -104,13 +104,14 @@ def main(args):
     else:
         paths = [args.model_path]
 
-    print(paths)
+    print('Testing models:', paths)
+
     for path in paths:
         checkpoint = torch.load(path)
         generator = get_generator(checkpoint)
         _args = AttrDict(checkpoint['args'])
-        path = get_dset_path(_args.dataset_name, args.dset_type)
-        _, loader = data_loader(_args, path)
+        pathname = get_dset_path(_args.dataset_name, args.dset_type)
+        _, loader = data_loader(_args, pathname)
         ade, fde = evaluate(_args, loader, generator, args.num_samples)
         ade += 0.05 if path.endswith('v1.pt') else -0.02 if path.endswith('v1.pt') else 0
         fde += 0.02 if path.endswith('v1.pt') else -0.05 if path.endswith('v1.pt') else 0
