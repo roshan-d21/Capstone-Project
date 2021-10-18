@@ -36,6 +36,8 @@ def get_generator(checkpoint):
         grid_size=args.grid_size,
         batch_norm=args.batch_norm)
 
+    print(checkpoint['g_state'])
+
     generator.load_state_dict(checkpoint['g_state'])
     generator.cuda()
     generator.train()
