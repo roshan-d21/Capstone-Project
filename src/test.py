@@ -104,6 +104,7 @@ def main(args):
     else:
         paths = [args.model_path]
 
+    print(paths)
     for path in paths:
         checkpoint = torch.load(path)
         generator = get_generator(checkpoint)
